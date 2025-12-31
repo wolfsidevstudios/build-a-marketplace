@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MercadoMX - Compra y Vende en México</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <nav class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center gap-2">
+                    <span class="text-2xl font-bold text-blue-600">MercadoMX</span>
+                </div>
+                <div class="flex-1 max-w-md mx-4 hidden md:block">
+                    <div class="relative">
+                        <input type="text" id="searchInput" placeholder="Buscar productos..." class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <span class="absolute left-3 top-2.5 text-gray-400">🔍</span>
+                    </div>
+                </div>
+                <div class="flex items-center gap-4">
+                    <button onclick="openModal('postModal')" class="bg-blue-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-blue-700 transition">Vender</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="flex flex-col md:flex-row gap-6">
+            <!-- Sidebar Filters -->
+            <aside class="w-full md:w-64 space-y-6">
+                <div>
+                    <h3 class="font-semibold mb-3">Categorías</h3>
+                    <ul id="categoryList" class="space-y-2 text-gray-600">
+                        <li class="cursor-pointer hover:text-blue-600" onclick="filterByCategory(null)">Todas</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-semibold mb-3">Ubicación</h3>
+                    <select id="stateFilter" class="w-full p-2 border rounded-lg">
+                        <option value="">Todo México</option>
+                        <option value="CDMX">CDMX</option>
+                        <option value="Jalisco">Jalisco</option>
+                        <option value="Nuevo León">Nuevo León</option>
+                        <option value="Puebla">Puebla</option>
+                        <option value="Querétaro">Querétaro</option>
+                    </select>
+                </div>
+            </aside>
+
+            <!-- Listings Grid -->
+            <section class="flex-1">
+                <div id="listingsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Listings will be injected here -->
+                </div>
+                <div id="emptyState" class="hidden text-center py-20">
+                    <p class="text-gray-500 text-xl">No se encontraron resultados.</p>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Post Modal -->
+    <div id="postModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-[60] p-4">
+        <div class="bg-white rounded-xl max-w-lg w-full p-6 max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-xl font-bold">Publicar un artículo</h2>
+                <button onclick="closeModal('postModal')" class="text-gray-500 text-2xl">&times;</button>
+            </div>
+            <form id="postForm" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium mb-1">Título</label>
+                    <input type="text" name="title" required class="w-full p-2 border rounded-lg">
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Precio (MXN)</label>
+                        <input type="number" name="price" required class="w-full p-2 border rounded-lg">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Categoría</label>
+                        <select name="category_id" id="categorySelect" required class="w-full p-2 border rounded-lg"></select>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Estado</label>
+                        <select name="location_state" required class="w-full p-2 border rounded-lg">
+                            <option value="CDMX">CDMX</option>
+                            <option value="Jalisco">Jalisco</option>
+                            <option value="Nuevo León">Nuevo León</option>
+                            <option value="Puebla">Puebla</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Ciudad</label>
+                        <input type="text" name="location_city" required class="w-full p-2 border rounded-lg">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1">URL de Imagen</label>
+                    <input type="url" name="image_url" placeholder="https://..." class="w-full p-2 border rounded-lg">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1">Descripción</label>
+                    <textarea name="description" rows="3" class="w-full p-2 border rounded-lg"></textarea>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Tu Nombre</label>
+                        <input type="text" name="seller_name" required class="w-full p-2 border rounded-lg">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1">WhatsApp/Tel</label>
+                        <input type="text" name="seller_contact" required class="w-full p-2 border rounded-lg">
+                    </div>
+                </div>
+                <button type="submit" class="w-full bg-blue-600 text-white py-3 rounded-lg font-bold hover:bg-blue-700">Publicar Ahora</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

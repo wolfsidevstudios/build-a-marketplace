@@ -1,0 +1,17 @@
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+.aspect-square {
+    aspect-ratio: 1 / 1;
+}
+
+/* Custom scrollbar for modal */
+#postModal > div::-webkit-scrollbar {
+    width: 6px;
+}
+
+#postModal > div::-webkit-scrollbar-thumb {
+    background-color: #cbd5e1;
+    border-radius: 10px;
+}
